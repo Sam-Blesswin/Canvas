@@ -4,7 +4,9 @@
 
 :root {
     --border1: theme(colors.border1);
+    --border2: theme(colors.border2);
     --shadow1: theme(colors.shadow1);
+    --shadow2: theme(colors.shadow2);
     --background1: theme(colors.background1);
     --text1: theme(colors.text1);
     --text2: theme(colors.text2);
