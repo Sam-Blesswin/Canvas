@@ -1,3 +1,5 @@
+import Menu from "@/components/Menu";
+
 export default function Home() {
-  return <h1>Sketchbook</h1>;
+  return <Menu />;
 }
