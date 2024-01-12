@@ -8,4 +8,12 @@ const COLORS = {
   PURPLE: "#800080",
 };
 
-export default COLORS;
+const MENU_ITEMS = {
+  PENCIL: "pencil",
+  ERASER: "eraser",
+  UNDO: "undo",
+  REDO: "redo",
+  DOWNLOAD: "download",
+};
+
+export { COLORS, MENU_ITEMS };
