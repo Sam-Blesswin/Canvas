@@ -6,6 +6,7 @@ const COLORS = {
   YELLOW: "#FFFF00",
   ORANGE: "#FFA500",
   PURPLE: "#800080",
+  WHITE: "#FFFFFF",
 };
 
 const MENU_ITEMS = {

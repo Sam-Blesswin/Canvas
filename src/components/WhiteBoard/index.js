@@ -1,7 +1,12 @@
 import { useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 
 const WhiteBoard = () => {
-  const canvasRef = useRef(null); //access a DOM element in your componen
+  const canvasRef = useRef(null); //access a DOM element in your component
+
+  const activeMenuItem = useSelector((state) => state.menu.activeMenuItem);
+  const color = useSelector((state) => state.toolbox[activeMenuItem].color);
+  const size = useSelector((state) => state.toolbox[activeMenuItem].size);
 
   //The useEffect hook is used here because it runs after the component mounts and the DOM is rendered.
   useEffect(() => {
