@@ -20,7 +20,7 @@ const Toolbox = () => {
     dispatch(changeBrushSize({ item: activeMenuItem, size: e.target.value }));
   };
 
-  const color = useSelector((state) => state.toolbox[activeMenuItem].color);
+  const { color, size } = useSelector((state) => state.toolbox[activeMenuItem]);
 
   const Stroke = (
     <div className={styles.toolItem}>
@@ -88,6 +88,7 @@ const Toolbox = () => {
           min={1}
           max={10}
           step={1}
+          value={size}
           onChange={updateBrushSize}
         />
       </div>
