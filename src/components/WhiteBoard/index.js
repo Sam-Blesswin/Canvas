@@ -8,6 +8,10 @@ const WhiteBoard = () => {
   const canvasRef = useRef(null); //access a DOM element in your component
   const shouldDraw = useRef(false); //useRef is used to maintain a mutable state across renders without triggering a re-render of the component itself.
 
+  //for undo and redo
+  const drawHistory = useRef([]);
+  const historyPointer = useRef(0);
+
   const { activeMenuItem, actionMenuItem } = useSelector((state) => state.menu);
   const { color, size } = useSelector((state) => state.toolbox[activeMenuItem]);
 
@@ -39,11 +43,20 @@ const WhiteBoard = () => {
       anchor.href = URL;
       anchor.download = "whiteboard.png";
       anchor.click(); //saves the file
-      console.log(URL);
+    } else if (actionMenuItem === MENU_ITEMS.UNDO) {
+      if (historyPointer.current > 0) {
+        historyPointer.current--;
+        ctx.putImageData(drawHistory.current[historyPointer.current], 0, 0); //draw the previous state on the canvas
+      }
+    } else if (actionMenuItem === MENU_ITEMS.REDO) {
+      if (historyPointer.current < drawHistory.current.length - 1) {
+        historyPointer.current++;
+        ctx.putImageData(drawHistory.current[historyPointer.current], 0, 0); //draw the next state on the canvas
+      }
     }
 
     dispatch(actionItemClick(null)); //Reset actionMenuItem
-  }, [actionMenuItem]);
+  }, [actionMenuItem, dispatch]);
 
   // useLayoutEffect is used for updates that need to be reflected on-screen immediately.
   // It sets the canvas dimensions to fill the entire viewport. This needs to happen synchronously
@@ -62,6 +75,11 @@ const WhiteBoard = () => {
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height); //fill the entire canvas with white color
 
+    drawHistory.current.push(
+      ctx.getImageData(0, 0, canvas.width, canvas.height)
+    ); //push the current state to array
+    historyPointer.current = drawHistory.current.length - 1; //set the pointer to the current state
+
     const handleMouseDown = (e) => {
       shouldDraw.current = true;
       ctx.beginPath();
@@ -75,7 +93,18 @@ const WhiteBoard = () => {
     };
 
     const handleMouseUp = (e) => {
+      console.log("MOUSE UP");
       shouldDraw.current = false;
+
+      //Update history array
+      const currentImageData = ctx.getImageData(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+      drawHistory.current.push(currentImageData); //push the current state to array
+      historyPointer.current = drawHistory.current.length - 1; //set the pointer to the current state
     };
 
     canvas.addEventListener("mousedown", handleMouseDown);
