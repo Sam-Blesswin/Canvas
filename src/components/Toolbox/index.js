@@ -86,7 +86,7 @@ const Toolbox = () => {
         <input
           type="range"
           min={1}
-          max={10}
+          max={20}
           step={1}
           value={size}
           onChange={updateBrushSize}

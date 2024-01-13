@@ -47,17 +47,22 @@ const Menu = () => {
       >
         <FontAwesomeIcon icon={faEraser} className={styles.icon} />
       </div>
-      <div className={styles.iconWrapper}>
-        <FontAwesomeIcon
-          icon={faRotateLeft}
-          className={styles.icon}
-          onClick={() => handleActionClick(MENU_ITEMS.UNDO)}
-        />
+      <div
+        className={styles.iconWrapper}
+        onClick={() => handleActionClick(MENU_ITEMS.UNDO)}
+      >
+        <FontAwesomeIcon icon={faRotateLeft} className={styles.icon} />
       </div>
-      <div className={styles.iconWrapper}>
+      <div
+        className={styles.iconWrapper}
+        onClick={() => handleActionClick(MENU_ITEMS.REDO)}
+      >
         <FontAwesomeIcon icon={faRotateRight} className={styles.icon} />
       </div>
-      <div className={styles.iconWrapper}>
+      <div
+        className={styles.iconWrapper}
+        onClick={() => handleActionClick(MENU_ITEMS.DOWNLOAD)}
+      >
         <FontAwesomeIcon icon={faDownload} className={styles.icon} />
       </div>
     </div>
