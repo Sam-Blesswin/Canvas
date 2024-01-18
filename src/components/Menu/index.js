@@ -20,7 +20,7 @@ const Menu = () => {
   const activeMenuItem = useSelector((state) => state.menu.activeMenuItem);
 
   const handleMenuClick = (menuItemName) => {
-    dispatch(menuItemClick(menuItemName)); //menuItemClick: (state, action) pass it as a parameter for action. i.e action.payload
+    dispatch(menuItemClick(menuItemName)); //menuItemClick: (state, action). pass parameter for action. i.e action.payload
   };
 
   const handleActionClick = (actionItemName) => {

@@ -4,9 +4,15 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { menuItemClick, actionItemClick } from "../../slice/menuSlice";
 
+import socket from "@/socket";
+
 const WhiteBoard = () => {
   const canvasRef = useRef(null); //access a DOM element in your component
-  const shouldDraw = useRef(false); //useRef is used to maintain a mutable state across renders without triggering a re-render of the component itself.
+
+  /*
+   *useRef is used to maintain a mutable state across renders without triggering a re-render of the component itself.
+   */
+  const shouldDraw = useRef(false);
 
   //for undo and redo
   const drawHistory = useRef([]);
@@ -14,6 +20,8 @@ const WhiteBoard = () => {
 
   const { activeMenuItem, actionMenuItem } = useSelector((state) => state.menu);
   const { color, size } = useSelector((state) => state.toolbox[activeMenuItem]);
+
+  console.log("rerendered!!"); //whenever a state in redux changes component rerenderes
 
   const dispatch = useDispatch();
 
@@ -84,12 +92,18 @@ const WhiteBoard = () => {
       shouldDraw.current = true;
       ctx.beginPath();
       ctx.moveTo(e.clientX, e.clientY); //start the line from the current mouse position
+
+      //send
+      socket.emit("beginPath", { x: e.clientX, y: e.clientY });
     };
 
     const handleMouseMove = (e) => {
       if (!shouldDraw.current) return;
       ctx.lineTo(e.clientX, e.clientY); //draw the line to the current mouse position
       ctx.stroke(); //draw the line to the current mouse position
+
+      //send
+      socket.emit("drawStroke", { x: e.clientX, y: e.clientY });
     };
 
     const handleMouseUp = (e) => {
@@ -107,9 +121,30 @@ const WhiteBoard = () => {
       historyPointer.current = drawHistory.current.length - 1; //set the pointer to the current state
     };
 
+    const handleBeginPath = (path) => {
+      ctx.beginPath();
+      ctx.moveTo(path.x, path.y);
+    };
+
+    const handleDrawStroke = (path) => {
+      console.log("drawStroke", path);
+      ctx.lineTo(path.x, path.y);
+      ctx.stroke();
+    };
+
+    //receive
+    socket.on("beginPathOthers", handleBeginPath);
+    socket.on("drawStrokeOthers", handleDrawStroke);
+
     canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      //cleanup
+      socket.off("beginPathOthers", handleBeginPath);
+      socket.off("drawStrokeOthers", handleDrawStroke);
+    };
   }, []);
 
   return <canvas ref={canvasRef}></canvas>;
